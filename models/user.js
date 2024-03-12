@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({Caption}) {
       // define association here
-      this.hasMany(Caption, { foreignKey: 'user_id' })
+      this.hasMany(Caption, { foreignKey: 'user_id', as: 'captions' })
     }
 
     toJSON() {
@@ -27,7 +27,13 @@ module.exports = (sequelize, DataTypes) => {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: true,
+      validate: {
+        isEmail: {
+          args: true,
+          msg: 'Username must be a valid email address'
+        }
+      }
     },
     password: {
       type: DataTypes.STRING,

@@ -24,7 +24,12 @@ app.get('/users/:uuid', async (req, res) => {
   const uuid = req.params.uuid;
   try {
       console.log('GET /users/:uuid');
-      const user = await User.findOne({where: { uuid }}); 
+      
+      const user = await User.findOne({
+        where: { uuid }, 
+        include: ['captions']
+      });
+       
       if (user) {
         return res.status(200).json(user);
       } else {
@@ -64,7 +69,7 @@ app.post('/caption', async (req, res) => {
 app.get('/caption', async (req, res) => {
   try {
     console.log('GET /caption');
-    const captions = await Caption.findAll();
+    const captions = await Caption.findAll({ include: ['user']});
     return res.status(200).json(captions);
   } catch (e) {
     console.log(e);
