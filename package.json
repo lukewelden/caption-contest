@@ -4,7 +4,7 @@
   "description": "A Codecademy Backend Engineering Portfolio Project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nodemon app.js"
   },
   "author": "Luke Welden",
   "license": "ISC",
@@ -13,5 +13,8 @@
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }
