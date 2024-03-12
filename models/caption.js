@@ -14,8 +14,17 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(User, { foreignKey: 'user_id' })
       this.belongsTo(Image, { foreignKey: 'image_id' })
     }
+
+    toJSON() {
+      return { ...this.get(), id: undefined }
+    }
   }
   Caption.init({
+    uuid: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false
+    },
     image_id: {
       type: DataTypes.INTEGER,
       allowNull: false
