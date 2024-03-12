@@ -24,7 +24,7 @@ app.get('/users/:uuid', async (req, res) => {
   const uuid = req.params.uuid;
   try {
       console.log('GET /users/:uuid');
-      
+
       const user = await User.findOne({
         where: { uuid }, 
         include: ['captions']
@@ -48,8 +48,13 @@ app.post('/users', async (req, res) => {
     const user = await User.create({ username, password });
     return res.status(201).json(user);
   } catch (e) {
-    console.log(e);
-    return res.status(500).json(e);
+    if (e.name === 'SequelizeValidationError') {
+      return res.status(400).json(e.errors.map(err => err.message));
+    } else {
+      console.log(e);
+      return res.status(500).json(e);
+    }
+    
   }
 }); 
 
