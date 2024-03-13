@@ -9,6 +9,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 }); 
 
+// USER ROUTES
 app.get('/users', async (req, res) => {
   try {
     console.log('GET /users');
@@ -56,8 +57,45 @@ app.post('/users', async (req, res) => {
     }
     
   }
+});
+
+app.delete('/users/:uuid', async (req, res) => {
+  const uuid = req.params.uuid;
+  try {
+    console.log('DELETE /users/:uuid');
+    const user = await User.findOne({ where: { uuid } });
+    if (user) {
+      await user.destroy();
+      return res.status(204).send();
+    } else {
+      return res.status(404).send('User with the specified UUID does not exist');
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json(e);
+  }
+});
+
+app.put('/users/:uuid', async (req, res) => {
+  const uuid = req.params.uuid;
+  const { password } = req.body;
+  try {
+    console.log('PUT /users/:uuid');
+    const user = await User.findOne({ where: { uuid } });
+    if (user) {
+      user.password = password;
+      await user.save();
+      return res.status(200).json("password updated!");
+    } else {
+      return res.status(404).send('User with the specified UUID does not exist');
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json(e);
+  }
 }); 
 
+// CAPTION ROUTES
 app.post('/caption', async (req, res) => {
   try {
     console.log('POST /caption');
