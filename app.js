@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const port = 3000
-const { sequelize, User, Caption } = require('./models');
+const { sequelize, User, Caption, Image } = require('./models');
 
 app.use(express.json());
 
@@ -9,7 +9,9 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 }); 
 
-// USER ROUTES
+/// USER ROUTES ///
+
+// Get all users 
 app.get('/users', async (req, res) => {
   try {
     console.log('GET /users');
@@ -21,6 +23,7 @@ app.get('/users', async (req, res) => {
   }
 }); 
 
+// Get specific user by UUID
 app.get('/users/:uuid', async (req, res) => {
   const uuid = req.params.uuid;
   try {
@@ -42,6 +45,7 @@ app.get('/users/:uuid', async (req, res) => {
     }
 });
 
+// Create a new user
 app.post('/users', async (req, res) => {
   console.log('POST /users');
   const { username, password } = req.body;
@@ -59,6 +63,7 @@ app.post('/users', async (req, res) => {
   }
 });
 
+// Delete a user by UUID
 app.delete('/users/:uuid', async (req, res) => {
   const uuid = req.params.uuid;
   try {
@@ -76,6 +81,7 @@ app.delete('/users/:uuid', async (req, res) => {
   }
 });
 
+// Update a user's password by UUID
 app.put('/users/:uuid', async (req, res) => {
   const uuid = req.params.uuid;
   const { password } = req.body;
@@ -95,7 +101,10 @@ app.put('/users/:uuid', async (req, res) => {
   }
 }); 
 
-// CAPTION ROUTES
+
+/// CAPTION ROUTES ///
+
+// Create a new caption
 app.post('/caption', async (req, res) => {
   try {
     console.log('POST /caption');
@@ -109,6 +118,7 @@ app.post('/caption', async (req, res) => {
   }
 });
 
+// Get all captions
 app.get('/caption', async (req, res) => {
   try {
     console.log('GET /caption');
@@ -118,7 +128,38 @@ app.get('/caption', async (req, res) => {
     console.log(e);
     return res.status(500).json(e);
   }
-}); 
+});
+
+/// IMAGE ROUTES ///
+
+// Get all images
+app.get('/images', async (req, res) => {
+  try {
+    console.log('GET /images');
+    const images = await Image.findAll();
+    return res.status(200).json(images);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json(e);
+  }
+});
+
+// Get specific image by ID
+app.get('/images/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    console.log('GET /images/:id');
+    const image = await Image.findOne({ where: { id }, include: ['captions'] });
+    if (image) {
+      return res.status(200).json(image);
+    } else {
+      return res.status(404).send('Image with the specified ID does not exist');
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json(e);
+  }
+});
 
 app.listen(port, async () => {
   console.log(`Example app listening on port ${port}`);
