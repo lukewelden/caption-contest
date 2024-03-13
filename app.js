@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const port = 3000
-const { sequelize, User, Caption, Image } = require('./models');
+const { sequelize, User, Caption, Image } = require('./database/models/index.js');
 const users = require('./routes/users.js');
 const captions = require('./routes/captions.js');
 const images = require('./routes/images.js');

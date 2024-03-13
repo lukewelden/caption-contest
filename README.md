@@ -23,5 +23,7 @@ In this project you will create the backend for a platform for users to particip
 - Sequelize
 - Render
 
-## Setting up PostgreSQL 
-This project uses a PostgreSQL database to store photos and user information. I have included a shell script [here](./database/setup.sh) that you can run within an ubuntu WSL instance to install and configure a Postgres DB for the app to use. 
+## Setup 
+To get started simply run the `npm install` command after cloning/forking the repo. 
+before you start running the application with `npm test` be sure to have read and 
+followed the instructions for setting up the database [./database/README.md](./database/README.md)
