@@ -3,6 +3,17 @@ const router = express.Router();
 const { User } = require('../database/models');
 const bcrypt = require('bcrypt');
 
+// Password hashing function
+async function hashPassword(password) {
+  try {
+    const salt = await bcrypt.genSalt(10);
+    return await bcrypt.hash(password, salt);
+  } catch (e) {
+    console.log(e);
+  }
+  return null; 
+}
+
 // Get all users 
 router.get('/', async (req, res) => {
     try {
@@ -121,16 +132,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Password hashing function
-async function hashPassword(password) {
-  try {
-    const salt = await bcrypt.genSalt(10);
-    return await bcrypt.hash(password, salt);
-  } catch (e) {
-    console.log(e);
-  }
-  return null; 
-}
+
 
 
 module.exports = router;

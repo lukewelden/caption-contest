@@ -28,3 +28,6 @@ commands.
 You can also run `sequelize db:seed:undo:all` and `sequelize db:migrate:undo:all` to revert the changes should you wish to start fresh. 
 
 > I'll be working on a way to automate this process. For example, when running `npm test` I'll run the migrations and seeders to set up the test server and then revert the process when the testing/development has ended. 
+
+### Session table 
+This project uses `express-session` and `passportjs` for user authentication and user session information is stored in a table within the PostgreSQL instance. To set this up we use the [connect-pg-simple](https://www.npmjs.com/package/connect-pg-simple) package. After installing this package you simply need to create the session table. There are numerous ways this can be done, I opted for simply copying the [sql script](https://github.com/voxpelli/node-connect-pg-simple/blob/main/table.sql) from the [node-connect-pg-simple](https://github.com/voxpelli/node-connect-pg-simple/tree/main) GitHub repo but you can check out the repos [README.md](https://github.com/voxpelli/node-connect-pg-simple/blob/main/README.md) for other ways to set this up. 
