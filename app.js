@@ -2,11 +2,13 @@ const express = require('express')
 const app = express()
 const port = 3000
 const { sequelize, User, Caption, Image } = require('./database/models/index.js');
-const users = require('./routes/users.js');
-const captions = require('./routes/captions.js');
-const images = require('./routes/images.js');
+const users = require('./web/routes/users.js');
+const captions = require('./web/routes/captions.js');
+const images = require('./web/routes/images.js');
 const session = require('express-session');
+var passport = require('passport');
 require('dotenv').config();
+require('./web/config/passport');
 
 app.use(session({
   store: new (require('connect-pg-simple')(session))({
@@ -18,20 +20,15 @@ app.use(session({
   cookie: { maxAge: 24 * 60 * 60 * 1000 }, // 24 hours
 })); 
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/users', users);
 app.use('/captions', captions);
 app.use('/images', images);
-
-app.get('/', (req, res) => {
-  if (!req.session.views) {
-    req.session.views = 0;
-  } 
-  req.session.views += 1;
-  console.log(req.session)
-  res.send(`You have visited this page ${req.session.views} times!`)
-});
 
 app.listen(port, async () => {
   console.log(`Example app listening on port ${port}`);

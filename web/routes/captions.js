@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Caption, User } = require('../database/models');
+const { Caption, User } = require('../../database/models');
 
 // Create a new caption
 router.post('/', async (req, res) => {

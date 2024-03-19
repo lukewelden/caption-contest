@@ -1,18 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { User } = require('../database/models');
-const bcrypt = require('bcrypt');
+const { User } = require('../../database/models');
+const passport = require('passport');
+const session = require('express-session');
+const { hashPassword } = require('../utils/passwords');
 
-// Password hashing function
-async function hashPassword(password) {
-  try {
-    const salt = await bcrypt.genSalt(10);
-    return await bcrypt.hash(password, salt);
-  } catch (e) {
-    console.log(e);
-  }
-  return null; 
-}
 
 // Get all users 
 router.get('/', async (req, res) => {
@@ -53,10 +45,10 @@ router.post('/', async (req, res) => {
   console.log('POST /users');
   const { username, password } = req.body;
 
-  const hashedPassword = await hashPassword(password);
+  const {hash, salt} = await hashPassword(password);
 
   try {
-    const user = await User.create({ username, password: hashedPassword });
+    const user = await User.create({ username, password: hash, salt: salt });
     return res.status(201).json(user);
   } catch (e) {
     if (e.name === 'SequelizeValidationError') {
@@ -111,28 +103,8 @@ router.put('/:uuid', async (req, res) => {
 });
 
 // User login 
-router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    console.log('POST /users/login');
-    const user = await User.findOne({ where: { username } });
-    if (user) {
-      const validPassword = await bcrypt.compare(password, user.password);
-      if (validPassword) {
-        return res.status(200).json('successful login!');
-      } else {
-        return res.status(401).send('Invalid username or password');
-      }
-    } else {
-      return res.status(401).send('Invalid username or password');
-    }
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json(e);
-  }
+router.post('/login', passport.authenticate('local'), (req, res) => {
+  res.status(200).json('Logged in successfully');
 });
-
-
-
 
 module.exports = router;
