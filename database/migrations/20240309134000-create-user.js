@@ -20,6 +20,9 @@ module.exports = {
       password: {
         type: DataTypes.STRING
       },
+      salt: {
+        type: DataTypes.STRING
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE

@@ -42,7 +42,11 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
       allowNull: false
-    }
+    },
+    salt: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
   }, {
     sequelize,
     tableName: 'users',
