@@ -2,14 +2,12 @@ const express = require('express');
 const router = express.Router();
 const { User } = require('../../database/models');
 const passport = require('passport');
-const session = require('express-session');
 const { hashPassword } = require('../utils/passwords');
 
 
 // Get all users 
 router.get('/', async (req, res) => {
     try {
-      console.log('GET /users');
       const users = await User.findAll();
       return res.status(200).json(users);
     } catch (e) {
@@ -22,8 +20,7 @@ router.get('/', async (req, res) => {
 router.get('/:uuid', async (req, res) => {
   const uuid = req.params.uuid;
   try {
-      console.log('GET /users/:uuid');
-
+    
       const user = await User.findOne({
         where: { uuid }, 
         include: ['captions']
@@ -39,33 +36,11 @@ router.get('/:uuid', async (req, res) => {
       return res.status(500).json(e);
     }
 });
-  
-// Create a new user
-router.post('/', async (req, res) => {
-  console.log('POST /users');
-  const { username, password } = req.body;
-
-  const {hash, salt} = await hashPassword(password);
-
-  try {
-    const user = await User.create({ username, password: hash, salt: salt });
-    return res.status(201).json(user);
-  } catch (e) {
-    if (e.name === 'SequelizeValidationError') {
-      return res.status(400).json(e.errors.map(err => err.message));
-    } else {
-      console.log(e);
-      return res.status(500).json(e);
-    }
-    
-  }
-});
 
 // Delete a user by UUID
 router.delete('/:uuid', async (req, res) => {
   const uuid = req.params.uuid;
   try {
-    console.log('DELETE /users/:uuid');
     const user = await User.findOne({ where: { uuid } });
     if (user) {
       await user.destroy();
@@ -87,7 +62,6 @@ router.put('/:uuid', async (req, res) => {
   const hashedPassword = await hashPassword(password);
 
   try {
-    console.log('PUT /users/:uuid');
     const user = await User.findOne({ where: { uuid } });
     if (user) {
       user.password = hashedPassword;
@@ -100,11 +74,6 @@ router.put('/:uuid', async (req, res) => {
     console.log(e);
     return res.status(500).json(e);
   }
-});
-
-// User login 
-router.post('/login', passport.authenticate('local'), (req, res) => {
-  res.status(200).json('Logged in successfully');
 });
 
 module.exports = router;
