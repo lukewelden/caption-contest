@@ -9,8 +9,6 @@ router.get('/register', (req, res) => {
     res.render('register');
   });
 
-
-
 // User login
 router.get('/login', (req, res) => {
     res.render('login');
@@ -39,5 +37,13 @@ router.post('/register', async (req, res) => {
       
     }
   });
+
+  // User logout
+router.get('/logout', function(req, res, next) {
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/');
+  });
+});
 
 module.exports = router;

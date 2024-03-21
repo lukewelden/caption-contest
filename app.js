@@ -31,6 +31,8 @@ app.use(passport.session());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// routes 
 app.use('/users', users);
 app.use('/captions', captions);
 app.use('/images', images);
